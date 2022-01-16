@@ -18,6 +18,7 @@ import java.util.List;
 public class FlickerFetcher {
     private static final String TAG="flickerFetcher";
     private static final String API_KEY="5da61261b6882e3fabd81c71c3c6ef8e";
+
     public byte[] getURLBytes(String uriSpec) throws IOException {
         URL url=new URL(uriSpec);
 

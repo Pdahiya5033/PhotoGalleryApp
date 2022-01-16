@@ -4,8 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Parteek/AndroidStudioProjects/MyPhotoGallery/app/src/main/res/layout/activity_fragment.xml" value="0.15489130434782608" />
+        <entry key="..\:/Users/Parteek/AndroidStudioProjects/MyPhotoGallery/app/src/main/res/layout/activity_login.xml" value="0.1816123188405797" />
+        <entry key="..\:/Users/Parteek/AndroidStudioProjects/MyPhotoGallery/app/src/main/res/layout/display_single_image.xml" value="0.1693840579710145" />
+        <entry key="..\:/Users/Parteek/AndroidStudioProjects/MyPhotoGallery/app/src/main/res/layout/fragment_for_single_imafe.xml" value="0.1693840579710145" />
         <entry key="..\:/Users/Parteek/AndroidStudioProjects/MyPhotoGallery/app/src/main/res/layout/fragment_photo_gallery.xml" value="0.15489130434782608" />
         <entry key="..\:/Users/Parteek/AndroidStudioProjects/MyPhotoGallery/app/src/main/res/layout/gallery_item.xml" value="0.19157608695652173" />
+        <entry key="..\:/Users/Parteek/AndroidStudioProjects/MyPhotoGallery/app/src/main/res/layout/login_fragment.xml" value="0.19293478260869565" />
+        <entry key="..\:/Users/Parteek/AndroidStudioProjects/MyPhotoGallery/app/src/main/res/layout/sign_up_fragment.xml" value="0.19791666666666666" />
       </map>
     </option>
   </component>

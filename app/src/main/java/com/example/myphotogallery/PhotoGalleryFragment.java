@@ -1,5 +1,6 @@
 package com.example.myphotogallery;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -11,16 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +30,9 @@ public class PhotoGalleryFragment extends Fragment {
     public static PhotoGalleryFragment newInstance(){
         return new PhotoGalleryFragment();
     }
+    private Drawable drawableImage;
+    private String imageString;
+    private PhotoHolder imageHolder;
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -45,8 +46,8 @@ public class PhotoGalleryFragment extends Fragment {
                 new ThumbnailDownloader.ThumbnailDownloadListener<PhotoHolder>(){
                     @Override
                     public void onThumbnailDownloaded(PhotoHolder photoHolder, Bitmap bitmap){
-                        Drawable drawable = new BitmapDrawable(getResources(),bitmap);
-                        photoHolder.bindDrawable(drawable);
+                        drawableImage = new BitmapDrawable(getResources(),bitmap);
+                        photoHolder.bindDrawable(drawableImage);
                     }
                 }
         );
@@ -60,7 +61,7 @@ public class PhotoGalleryFragment extends Fragment {
         View v=inflater.inflate(R.layout.fragment_photo_gallery,container,false);
 
         mPhotoRecyclerView=(RecyclerView) v.findViewById(R.id.fragment_photo_gallery_recycler_view);
-        mPhotoRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),3));
+        mPhotoRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         setupAdapter();
         return v;
     }
@@ -93,6 +94,11 @@ public class PhotoGalleryFragment extends Fragment {
             return new FlickerFetcher().fetchItems();
 
         }
+        // for showing progress bar
+//        @Override
+//        protected void onProgressUpdate(Integer... progress){
+//            setProgressPercent(progress[0]);
+//        }
         @Override
         protected void onPostExecute(List<GalleryItem> items){
             mItems=items;
@@ -100,14 +106,17 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
-    private class PhotoHolder extends RecyclerView.ViewHolder{
+    public class PhotoHolder extends RecyclerView.ViewHolder{
 //        private TextView mTtileTextView;
         private ImageView mItemImageView;
+
         public PhotoHolder(View itemView){
             super(itemView);
 //            mTtileTextView=(TextView) itemView;
             mItemImageView=(ImageView) itemView.findViewById(R.id.fragment_photo_gallery_image_view);
+
         }
+
         public void bindDrawable(Drawable drawable){
             mItemImageView.setImageDrawable(drawable);
         }
@@ -117,7 +126,7 @@ public class PhotoGalleryFragment extends Fragment {
     }
     private class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder>{
         private List<GalleryItem> mGalleryItems;
-
+        private ImageView mBigImageView;
         public PhotoAdapter(List<GalleryItem> galleryItems){
             mGalleryItems=galleryItems;
 
@@ -128,8 +137,18 @@ public class PhotoGalleryFragment extends Fragment {
         public PhotoHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 //            TextView textView=new TextView(getActivity());
 //            return new PhotoHolder(textView);
+
             LayoutInflater inflater=LayoutInflater.from(getActivity());
             View view=inflater.inflate(R.layout.gallery_item,parent,false);
+            mBigImageView=(ImageView) view.findViewById(R.id.fragment_photo_gallery_image_view);
+            mBigImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentManager fm=getActivity().getSupportFragmentManager();
+                    Fragment fragment=SingleImageFragment.newInstance(imageString);
+                    fm.beginTransaction().replace(R.id.fragment_container,fragment).addToBackStack(null).commit();
+                }
+            });
             return new PhotoHolder(view);
         }
 
@@ -137,6 +156,8 @@ public class PhotoGalleryFragment extends Fragment {
         public void onBindViewHolder(PhotoHolder holder, int position) {
             GalleryItem galleryItem=mGalleryItems.get(position);
 //            holder.bindGalleryItem(galleryItem);
+            imageString=galleryItem.getUrl();
+
             Drawable placeHolder=getResources().getDrawable(R.drawable.bill_up_close);
             holder.bindDrawable(placeHolder);
             mthumbnailDownloader.queueThumbnail(holder,galleryItem.getUrl());
